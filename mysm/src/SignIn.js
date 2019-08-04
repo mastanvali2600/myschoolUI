@@ -1,20 +1,17 @@
 import React, { useContext } from "react";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Input from "@material-ui/core/Input";
 import Select from "@material-ui/core/Select";
 import { LoginListContext } from "./LoginListContext";
+import SignInEmail from "./SIgnInMail";
+import SignInPhone from "./SignInPhone";
+import SignInLogo from "./SignInLogo";
+import FormControl from "@material-ui/core/FormControl";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -38,86 +35,61 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    width: "100%"
   }
 }));
 
 export default function SignIn() {
   const classes = useStyles();
   const [logins, setLogins] = useContext(LoginListContext);
-  const [state, setState] = React.useState({
-    loginType: ""
-  });
+  const [visible, setVisible] = React.useState();
+  const [disableSubmit, setEnableSubmit] = React.useState();
   const handleLoginType = name => event => {
-    setState({ ...state, [name]: Number(event.target.value) });
-    console.log(state);
+    setVisible(Number(event.target.value) === 3);
+    setEnableSubmit(Number(event.target.value) !== 0);
+    console.log(Number(event.target.value));
   };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
+        <SignInLogo classes={classes} />
         <form className={classes.form} noValidate>
           <h1 />
-          <InputLabel htmlFor="outlined-age-native-simple">Login As</InputLabel>
-          <Select
-            native
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            value={state.loginType}
-            onChange={handleLoginType("loginType")}
-            input={<Input id="age-native-simple" />}
-          >
-            <option value="" />
-            {logins.map(login => (
-              <option value={login.id} key={login.id}>
-                {login.name}
-              </option>
-            ))}
-          </Select>
-          <div>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
+
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="age-native-simple">Login As</InputLabel>
+            <Select
+              native
+              onChange={handleLoginType("loginType")}
+              inputProps={{
+                name: "Login As",
+                id: "age-native-simple"
+              }}
+            >
+              {logins.map(login => (
+                <option value={login.id} key={login.id}>
+                  {login.name}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
+          {!visible ? <SignInEmail /> : null}
+          {visible ? <SignInPhone /> : null}
+          {disableSubmit ? (
+            <Button
+              type="submit"
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-          </div>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign In
+            </Button>
+          ) : null}
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

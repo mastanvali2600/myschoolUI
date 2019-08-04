@@ -5,6 +5,10 @@ export const LoginListContext = createContext();
 export const LoginListProvider = props => {
   const [logins, setLogins] = useState([
     {
+      id: 0,
+      name: ""
+    },
+    {
       id: 1,
       name: "Principal"
     },
