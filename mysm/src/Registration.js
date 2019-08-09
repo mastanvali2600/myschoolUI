@@ -1,18 +1,16 @@
 import React, { useContext } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Select from "@material-ui/core/Select";
 import { LoginListContext } from "./LoginListContext";
-import SignInEmail from "./SIgnInMail";
 import SignInPhone from "./SignInPhone";
 import SignInLogo from "./SignInLogo";
 import FormControl from "@material-ui/core/FormControl";
-
+import PricipalRegistration from "./PrincipalRegistration";
+import FacultyRegistration from "./FacultyRegistration";
 const useStyles = makeStyles(theme => ({
   "@global": {
     body: {
@@ -30,11 +28,21 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.secondary.main
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "75%", // Fix IE 11 issue.
     marginTop: theme.spacing(1)
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: "100%"
+  },
+  gridList: {
+    flexWrap: "nowrap",
+    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+    transform: "translateZ(0)"
   },
   formControl: {
     margin: theme.spacing(1),
@@ -42,43 +50,55 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function SignIn() {
+export default function Registration() {
+  const regList = [
+    { id: 0, name: "" },
+    { id: 1, name: "Principal" },
+    { id: 2, name: "Faculty" }
+  ];
+  const options = regList.map(reg => {
+    return (
+      <option value={reg.id} key={reg.id}>
+        {reg.name}
+      </option>
+    );
+  });
   const classes = useStyles();
   const [logins, setLogins] = useContext(LoginListContext);
-  const [visible, setVisible] = React.useState();
+  const [visiblePrinciapal, setVisiblePrinciapal] = React.useState();
+  const [visibleFaculty, setVisibleFaculty] = React.useState();
   const [disableSubmit, setEnableSubmit] = React.useState();
   const handleLoginType = name => event => {
-    setVisible(Number(event.target.value) === 3);
+    setVisiblePrinciapal(Number(event.target.value) === 1);
+    setVisibleFaculty(Number(event.target.value) === 2);
     setEnableSubmit(Number(event.target.value) !== 0);
     console.log(Number(event.target.value));
   };
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="100%">
       <CssBaseline />
       <div className={classes.paper}>
-        <SignInLogo classes={classes} type="Sign in" />
+        <SignInLogo classes={classes} type="Registration" />
         <form className={classes.form} noValidate>
           <h1 />
 
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="age-native-simple">Login As</InputLabel>
+            <InputLabel htmlFor="age-native-simple">Register As</InputLabel>
             <Select
               native
               onChange={handleLoginType("loginType")}
               inputProps={{
-                name: "Login As",
+                name: "Register As",
                 id: "age-native-simple"
               }}
             >
-              {logins.map(login => (
-                <option value={login.id} key={login.id}>
-                  {login.name}
-                </option>
-              ))}
+              {options}
             </Select>
           </FormControl>
-          {!visible ? <SignInEmail /> : null}
-          {visible ? <SignInPhone /> : null}
+          {visiblePrinciapal ? (
+            <PricipalRegistration classes={classes} />
+          ) : null}
+          {visibleFaculty ? <FacultyRegistration classes={classes} /> : null}
           {disableSubmit ? (
             <Button
               type="submit"
@@ -87,21 +107,9 @@ export default function SignIn() {
               color="primary"
               className={classes.submit}
             >
-              Sign In
+              Register
             </Button>
           ) : null}
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
     </Container>

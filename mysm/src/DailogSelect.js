@@ -10,7 +10,6 @@ import Input from "@material-ui/core/Input";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { LoginListContext } from "./LoginListContext";
-import select from "./select";
 const useStyles = makeStyles(theme => ({
   container: {
     display: "flex",
@@ -45,7 +44,6 @@ export default function DialogSelect() {
 
   return (
     <div>
-      <select />
       <Button onClick={handleClickOpen}>Login dialog</Button>
       <Dialog
         disableBackdropClick
